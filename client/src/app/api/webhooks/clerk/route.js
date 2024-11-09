@@ -1,13 +1,14 @@
-import { Webhook } from "svix";
-import { headers } from "next/headers";
-import { clerkClient } from "@clerk/nextjs/server";
+/* eslint-disable camelcase */
+
 import { createUser } from "@/libs/actions/user.action";
+import { clerkClient } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { Webhook } from "svix";
 
 export async function POST(req) {
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
+  // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-
   if (!WEBHOOK_SECRET) {
     throw new Error(
       "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
@@ -50,38 +51,62 @@ export async function POST(req) {
     });
   }
 
-  // Do something with the payload
+  // Get the ID and type
   const { id } = evt.data;
   const eventType = evt.type;
 
-  if (eventType === "user.created") {
-    const { email_addresses, image_url, username, first_name, last_name } =
-      evt.data;
+  try {
+    // CREATE
+    if (eventType === "user.created") {
+      const { email_addresses, image_url, username } = evt.data;
+      const user = {
+        clerkId: id,
+        email: email_addresses[0].email_address,
+        userName: username || null,
+        photo: image_url,
+      };
 
-    const user = {
-      clerkId: id,
-      email: email_addresses[0].email_address,
-      userName: username,
-      photo: image_url,
-    };
+      const newUser = await createUser(user);
 
-    console.log(user);
+      // Set public metadata
+      if (newUser) {
+        await clerkClient.users.updateUser(id, {
+          publicMetadata: {
+            userId: newUser.id,
+          },
+        });
+      } else {
+        await clerkClient.users.deleteUser(id);
+        return NextResponse.redirect("/");
+      }
 
-    const newUser = await createUser(user);
-
-    if (newUser) {
-      await clerkClient.users.updateUserMetadata(id, {
-        publicMetadata: {
-          userId: newUser._id,
-        },
-      });
+      return NextResponse.json({ message: "OK", user: newUser });
     }
 
-    return NextResponse.json({ message: "New user created", user: newUser });
+    // UPDATE
+    // if (eventType === "user.updated") {
+    //   const { image_url, username } = evt.data;
+
+    //   const user = {
+    //     username: username || null,
+    //     image_url: image_url,
+    //   };
+
+    //   const updatedUser = await updateUser(id, user);
+
+    //   return NextResponse.json({ message: "OK", user: updatedUser });
+    // }
+
+    // // DELETE
+    // if (eventType === "user.deleted") {
+    //   const deletedUser = await deleteUser(id);
+
+    //   return NextResponse.json({ message: "OK", user: deletedUser });
+    // }
+  } catch (error) {
+    console.error(`Error handling ${eventType} event:`, error);
+    return new Response(`Error handling ${eventType} event`, { status: 500 });
   }
 
-  console.log(`Webhook with an ID of ${id} and type of ${eventType}`);
-  console.log("Webhook body:", body);
-
-  return new Response("", { status: 200 });
-}
+  return new Response("success", { status: 200 });
+};
