@@ -1,12 +1,12 @@
+import { Webhook } from "svix";
+import { headers } from "next/headers";
 import { clerkClient } from "@clerk/nextjs/server";
-import { createUser } from "@/libs/actions/user.action";
+import { createUser } from "@/actions/user.action";
 import { NextResponse } from "next/server";
-import crypto from "crypto";
-import { toast } from "react-toastify"; // Replaced with react-toastify
 
 export async function POST(req) {
+  // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-  console.log("secret", process.env.WEBHOOK_SECRET);
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
@@ -14,37 +14,49 @@ export async function POST(req) {
     );
   }
 
-  const headerPayload = req.headers;
-  const svix_id = headerPayload["svix-id"];
-  const svix_timestamp = headerPayload["svix-timestamp"];
-  const svix_signature = headerPayload["svix-signature"];
+  // Get the headers
+  const headerPayload = headers();
+  const svix_id = headerPayload.get("svix-id");
+  const svix_timestamp = headerPayload.get("svix-timestamp");
+  const svix_signature = headerPayload.get("svix-signature");
 
+  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response("Error occurred -- no svix headers", {
       status: 400,
     });
   }
 
+  // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  // Verify the webhook signature manually using crypto
-  const hmac = crypto.createHmac("sha256", WEBHOOK_SECRET);
-  hmac.update(svix_id + svix_timestamp + body);
-  const computedSignature = hmac.digest("hex");
+  // Create a new Svix instance with your secret.
+  const wh = new Webhook(WEBHOOK_SECRET);
 
-  if (computedSignature !== svix_signature) {
-    console.error("Error verifying webhook signature");
+  let evt;
+
+  // Verify the payload with the headers
+  try {
+    evt = wh.verify(body, {
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
+    });
+  } catch (err) {
+    console.error("Error verifying webhook:", err);
     return new Response("Error occurred", {
       status: 400,
     });
   }
 
-  const { id } = payload.data;
-  const eventType = payload.type;
+  // Do something with the payload
+  const { id } = evt.data;
+  const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const { id, email_addresses } = payload.data;
+    const { email_addresses, image_url, username, first_name, last_name } =
+      evt.data;
 
     const user = {
       clerkId: id,
@@ -52,7 +64,9 @@ export async function POST(req) {
       userName: username,
       photo: image_url,
     };
-    console.log("from clerk webhooks", user);
+
+    console.log(user);
+
     const newUser = await createUser(user);
 
     if (newUser) {
@@ -61,19 +75,13 @@ export async function POST(req) {
           userId: newUser._id,
         },
       });
-
-      // Use react-toastify for notification
-      toast.success("Signup successfully");
     }
 
-    return NextResponse.json({
-      message: "user added successfully",
-      user: newUser,
-    });
+    return NextResponse.json({ message: "New user created", user: newUser });
   }
 
   console.log(`Webhook with an ID of ${id} and type of ${eventType}`);
   console.log("Webhook body:", body);
 
-  return new Response("success", { status: 200 });
+  return new Response("", { status: 200 });
 }
