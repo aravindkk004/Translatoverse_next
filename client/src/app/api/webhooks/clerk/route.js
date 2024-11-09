@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { createUser } from "@/libs/actions/user.action";
 import { clerkClient } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
@@ -7,37 +5,28 @@ import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
 export async function POST(req) {
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
   if (!WEBHOOK_SECRET) {
-    throw new Error(
-      "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
-    );
+    console.error("WEBHOOK_SECRET is missing from environment variables.");
+    return new Response("Webhook secret not configured.", { status: 500 });
   }
 
-  // Get the headers
   const headerPayload = headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error occurred -- no svix headers", {
-      status: 400,
-    });
+    console.error("Missing svix headers.");
+    return new Response("Invalid webhook headers.", { status: 400 });
   }
 
-  // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
 
   let evt;
-
-  // Verify the payload with the headers
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -45,30 +34,24 @@ export async function POST(req) {
       "svix-signature": svix_signature,
     });
   } catch (err) {
-    console.error("Error verifying webhook:", err);
-    return new Response("Error occurred", {
-      status: 400,
-    });
+    console.error("Webhook verification failed:", err);
+    return new Response("Unauthorized webhook", { status: 401 });
   }
 
-  // Get the ID and type
-  const { id } = evt.data;
-  const eventType = evt.type;
+  const { id, type: eventType } = evt.data;
 
   try {
-    // CREATE
     if (eventType === "user.created") {
       const { email_addresses, image_url, username } = evt.data;
       const user = {
         clerkId: id,
-        email: email_addresses[0].email_address,
+        email: email_addresses[0]?.email_address || "",
         userName: username || null,
-        photo: image_url,
+        photo: image_url || null,
       };
 
       const newUser = await createUser(user);
 
-      // Set public metadata
       if (newUser) {
         await clerkClient.users.updateUser(id, {
           publicMetadata: {
@@ -77,36 +60,18 @@ export async function POST(req) {
         });
       } else {
         await clerkClient.users.deleteUser(id);
-        return NextResponse.redirect("/");
+        return new Response("User creation failed", { status: 400 });
       }
 
-      return NextResponse.json({ message: "OK", user: newUser });
+      return new Response(JSON.stringify({ message: "OK", user: newUser }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
     }
-
-    // UPDATE
-    // if (eventType === "user.updated") {
-    //   const { image_url, username } = evt.data;
-
-    //   const user = {
-    //     username: username || null,
-    //     image_url: image_url,
-    //   };
-
-    //   const updatedUser = await updateUser(id, user);
-
-    //   return NextResponse.json({ message: "OK", user: updatedUser });
-    // }
-
-    // // DELETE
-    // if (eventType === "user.deleted") {
-    //   const deletedUser = await deleteUser(id);
-
-    //   return NextResponse.json({ message: "OK", user: deletedUser });
-    // }
   } catch (error) {
     console.error(`Error handling ${eventType} event:`, error);
     return new Response(`Error handling ${eventType} event`, { status: 500 });
   }
 
-  return new Response("success", { status: 200 });
-};
+  return new Response("Webhook processed successfully", { status: 200 });
+}
