@@ -1,10 +1,9 @@
-import { UserButton } from "@clerk/nextjs";
+import React from 'react'
 
-export default function Dashboard(){
-    return (
-        <>
-            <p>Hello Aravind</p>
-            <UserButton />
-        </>
-    )
+const page = () => {
+  return (
+    <div>page</div>
+  )
 }
+
+export default page
