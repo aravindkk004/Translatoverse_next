@@ -7,11 +7,11 @@ import { FaStar } from "react-icons/fa6";
 import { IoMdContact } from "react-icons/io";
 import { FaTools } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import { UserButton,useAuth } from "@clerk/nextjs";
+import { UserButton, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 
 export default function NavBar() {
-//   const { userId } = useAuth();
+  //   const { userId } = useAuth();
   const [isToggle, setIstoggle] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -58,22 +58,16 @@ export default function NavBar() {
               </li>
             </ul>
           </div>
-          {/* {userId ? (
-            <div>
-              <UserButton redirectUrl="/"/>
-            </div>
-          ) : ( */}
-            <div className="btn w-1/4 lg:justify-end lg:flex hidden">
-              <Link
-                href="/sign-in"
-                className={`${
-                  isScrolled ? "bg-customHoverColor text-white" : "bg-white"
-                } px-8 py-2 rounded-full`}
-              >
-                Login
-              </Link>
-            </div>
-          {/* )} */}
+          <div className="btn w-1/4 lg:justify-end lg:flex hidden">
+            <Link
+              href={"/sign-in"}
+              className={`${
+                isScrolled ? "bg-customHoverColor text-white" : "bg-white"
+              } px-8 py-2 rounded-full`}
+            >
+              Login
+            </Link>
+          </div>
 
           <RiMenu3Fill
             size={"2rem"}
