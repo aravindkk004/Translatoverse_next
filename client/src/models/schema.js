@@ -1,5 +1,47 @@
 import mongoose from "mongoose";
 
+const historyStoring = new mongoose.Schema(
+  {
+    translation_type: {
+      type: String,
+      required: true,
+    },
+    destination_language: {
+      type: String,
+      required: true,
+    },
+    outputText: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const bookmarkStoring = new mongoose.Schema(
+  {
+    translation_type: {
+      type: String,
+    },
+    destination_language: {
+      type: String,
+    },
+    inputText: {
+      type: String,
+      required: false,
+    },
+    file_url: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    outputText: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
 const userSchema = new mongoose.Schema(
   {
     clerkId: {
@@ -11,21 +53,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      validate: {
-        validator: function (v) {
-          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
-        },
-        message: (props) => `${props.value} is not a valid email!`,
-      },
     },
     userName: {
       type: String,
-      required: false, 
+      required: false,
     },
     photo: {
       type: String,
-      required: false, 
+      required: false,
     },
+    Translation_history: [historyStoring],
+    Bookmarks: [bookmarkStoring],
   },
   { timestamps: true }
 );

@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+"use client"
+import { useRef, useState, useEffect } from "react";
 import { TbWorld } from "react-icons/tb";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdKeyboardVoice } from "react-icons/md";
@@ -21,6 +22,11 @@ const InputBox = ({
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [selectedAudio, setSelectedAudio] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true); // Ensure `URL.createObjectURL` executes only on client
+  }, []);
 
   const handleTopDivClick = () => {
     fileInputRef.current.click();
@@ -33,19 +39,20 @@ const InputBox = ({
 
   const handleTextareaChange = (event) => {
     handleInputText(event);
-    setSelectedImage(null);
-    setSelectedPdf(null);
-    setSelectedAudio(null);
-    setSelectedFile(null);
+    resetFiles();
   };
 
   const handleFileTypeChange = (fileType) => {
     setSelectedFileType(fileType);
     setDropdownOpen(false);
+    resetFiles();
+    setFileType(fileType.value);
+  };
+
+  const resetFiles = () => {
     setSelectedImage(null);
     setSelectedPdf(null);
     setSelectedAudio(null);
-    setFileType(fileType.value);
     setSelectedFile(null);
   };
 
@@ -54,24 +61,17 @@ const InputBox = ({
 
     if (selectedFileType.value === "image" && file.type.startsWith("image/")) {
       setSelectedImage(file);
-      setSelectedPdf(null);
-      setSelectedAudio(null);
     } else if (
       selectedFileType.value === "pdf" &&
       file.type === "application/pdf"
     ) {
-      setSelectedImage(null);
       setSelectedPdf(file);
-      setSelectedAudio(null);
     } else if (
       selectedFileType.value === "voice" &&
       file.type.startsWith("audio/")
     ) {
-      setSelectedImage(null);
-      setSelectedPdf(null);
       setSelectedAudio(file);
     } else {
-      // File type does not match selected file type
       alert(
         `Selected file type '${selectedFileType.label}' does not match the dropped file type.`
       );
@@ -82,24 +82,9 @@ const InputBox = ({
     setSelectedFile(file);
   };
 
-  const handleDragOver = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  const handleDragEnter = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  const handleDragLeave = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
+  const handleDragOver = (event) => event.preventDefault();
   const handleDrop = (event) => {
     event.preventDefault();
-    event.stopPropagation();
     const droppedFile = event.dataTransfer.files[0];
     handleFileDrop(droppedFile);
   };
@@ -109,8 +94,6 @@ const InputBox = ({
       className="p-[15px] bg-zinc-200 rounded-xl sm:w-[45%] w-[90%]"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
     >
       <div className="flex items-center">
         <p className="mr-[10px]">From:</p>
@@ -132,7 +115,7 @@ const InputBox = ({
         </div>
       )}
 
-      {selectedImage && (
+      {isClient && selectedImage && (
         <div className="flex justify-center my-4">
           <img
             src={URL.createObjectURL(selectedImage)}
@@ -142,7 +125,7 @@ const InputBox = ({
         </div>
       )}
 
-      {selectedPdf && (
+      {isClient && selectedPdf && (
         <div className="flex justify-center my-4">
           <iframe
             src={URL.createObjectURL(selectedPdf)}
@@ -154,7 +137,7 @@ const InputBox = ({
         </div>
       )}
 
-      {selectedAudio && (
+      {isClient && selectedAudio && (
         <div className="flex justify-center my-4">
           <audio controls className="w-full">
             <source

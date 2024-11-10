@@ -25,13 +25,13 @@ const Footer = () => {
           </address>
           <div className="icons flex flex-wrap gap-5">
             <div className="bg-white p-3 rounded-full cursor-pointer hover:bg-[#fe6044]">
-              <FaYoutube class="text-red-600 hover:text-white" />
+              <FaYoutube className="text-red-600 hover:text-white" />
             </div>
             <div className="bg-white p-3 rounded-full cursor-pointer hover:bg-[#fe6044]">
-              <FaLinkedinIn class="text-blue-800 hover:text-white" />
+              <FaLinkedinIn className="text-blue-800 hover:text-white" />
             </div>
             <div className="bg-white p-3 rounded-full cursor-pointer hover:bg-[#fe6044]">
-              <FaXTwitter class="text-black hover:text-white" />
+              <FaXTwitter className="text-black hover:text-white" />
             </div>
             <div className="bg-white p-3 rounded-full cursor-pointer hover:bg-[#fe6044]">
               <FaInstagram className="text-pink-400 hover:text-white" />
