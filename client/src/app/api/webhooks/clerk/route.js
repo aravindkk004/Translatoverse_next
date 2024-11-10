@@ -1,7 +1,7 @@
 // pages/api/webhooks/clerk.js
 
 import { Webhook } from "svix";
-import { connect } from "@/libs/mongodb"; // Add your MongoDB connection function
+import { connectToDb } from "@/libs/connectToDb";
 import User from "@/models/schema"; // Your User schema file
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
