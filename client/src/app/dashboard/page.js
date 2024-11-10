@@ -1,11 +1,10 @@
-// import { UserButton } from "@clerk/nextjs";
-// import React from "react";
+import { UserButton } from "@clerk/nextjs";
 
 const page = () => {
   return (
     <>
       <div>page</div>
-      {/* <UserButton /> */}
+      <UserButton />
     </>
   );
 };
