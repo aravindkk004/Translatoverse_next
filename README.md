@@ -127,22 +127,3 @@ Ensure MongoDB is running (locally or on a cloud service like MongoDB Atlas). Se
 Create a Clerk account and obtain your API keys. Update the `.env.local` and `.env` files with your Clerk credentials for the frontend and backend respectively.
 
 ---
-
-## Folder Structure
-
-```bash
-/client                # Frontend (Next.js)
-  /components          # React components for UI
-  /pages               # Next.js pages
-  /styles              # Tailwind CSS styles
-  /utils               # Utility functions and helpers
-
-/server                # Backend (Flask)
-  /app                 # Flask routes and controllers
-  /models              # MongoDB models (e.g., User, Bookmarks)
-  /libs                # Database connection utilities
-  /static              # Static assets (e.g., image processing)
-  /utils               # Helper functions for processing translations
-  .env                 # Backend environment variables
-  requirements.txt     # Python dependencies
-
