@@ -6,52 +6,49 @@ import { Webhook } from "svix";
 
 export async function POST(req) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+
   if (!WEBHOOK_SECRET) {
-    console.error("WEBHOOK_SECRET is missing from environment variables.");
+    console.error("WEBHOOK_SECRET is not set in environment variables.");
     return NextResponse.error({
       status: 500,
-      statusText: "Webhook secret not configured.",
+      statusText: "Webhook secret is not configured.",
     });
   }
 
   const headerPayload = headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
+  const svixHeaders = {
+    "svix-id": headerPayload.get("svix-id"),
+    "svix-timestamp": headerPayload.get("svix-timestamp"),
+    "svix-signature": headerPayload.get("svix-signature"),
+  };
 
-  if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.error("Missing svix headers.");
+  if (!svixHeaders["svix-id"] || !svixHeaders["svix-timestamp"] || !svixHeaders["svix-signature"]) {
+    console.error("Missing required Svix headers.");
     return NextResponse.error({
       status: 400,
-      statusText: "Invalid webhook headers.",
+      statusText: "Invalid Svix webhook headers.",
     });
   }
 
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
-
+  const body = await req.text();
   const webhook = new Webhook(WEBHOOK_SECRET);
 
   let evt;
   try {
-    evt = webhook.verify(body, {
-      "svix-id": svix_id,
-      "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
-    });
+    evt = webhook.verify(body, svixHeaders);
   } catch (err) {
     console.error("Webhook verification failed:", err);
     return NextResponse.error({
       status: 401,
-      statusText: "Unauthorized webhook",
+      statusText: "Unauthorized webhook request.",
     });
   }
 
-  const { id, type: eventType } = evt;
+  const { id, type: eventType, data } = evt;
 
   try {
     if (eventType === "user.created") {
-      const { email_addresses, image_url, username } = evt.data;
+      const { email_addresses, image_url, username } = data;
       const user = {
         clerkId: id,
         email: email_addresses[0]?.email_address || "",
@@ -63,27 +60,27 @@ export async function POST(req) {
 
       if (newUser) {
         await clerkClient.users.updateUser(id, {
-          publicMetadata: {
-            userId: newUser.id,
-          },
+          publicMetadata: { userId: newUser.id },
         });
+        return NextResponse.json({ message: "User created successfully", user: newUser });
       } else {
         await clerkClient.users.deleteUser(id);
+        console.error("Failed to save user in the database.");
         return NextResponse.error({
           status: 400,
-          statusText: "User creation failed",
+          statusText: "Database error: User creation failed.",
         });
       }
-
-      return NextResponse.json({ message: "OK", user: newUser });
+    } else {
+      console.log(`Unhandled event type: ${eventType}`);
     }
   } catch (error) {
     console.error(`Error handling ${eventType} event:`, error);
     return NextResponse.error({
       status: 500,
-      statusText: `Error handling ${eventType} event`,
+      statusText: `Server error handling ${eventType} event.`,
     });
   }
 
-  return NextResponse.json({ message: "Webhook processed successfully" });
+  return NextResponse.json({ message: "Webhook processed successfully." });
 }
