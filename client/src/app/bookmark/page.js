@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import TopNav from "@/components/Dashboardpage/DashboardPageComponents/TopNav";
 import SideNav from "@/components/Dashboardpage/DashboardPageComponents/SideNav";
 
-const page = () => {
+const Page = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -34,4 +34,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
