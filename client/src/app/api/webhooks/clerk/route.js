@@ -1,54 +1,69 @@
-import { createUser } from "@/libs/actions/user.action";
-import { clerkClient } from "@clerk/nextjs/server";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
+// pages/api/webhooks/clerk.js
+
 import { Webhook } from "svix";
+import { connect } from "@/libs/mongodb"; // Add your MongoDB connection function
+import User from "@/models/schema"; // Your User schema file
+import { clerkClient } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-
+  
   if (!WEBHOOK_SECRET) {
-    console.error("WEBHOOK_SECRET is not set in environment variables.");
+    console.error("WEBHOOK_SECRET is missing from environment variables.");
     return NextResponse.error({
       status: 500,
-      statusText: "Webhook secret is not configured.",
+      statusText: "Webhook secret not configured.",
     });
   }
 
-  const headerPayload = headers();
-  const svixHeaders = {
-    "svix-id": headerPayload.get("svix-id"),
-    "svix-timestamp": headerPayload.get("svix-timestamp"),
-    "svix-signature": headerPayload.get("svix-signature"),
-  };
+  const headerPayload = req.headers;
+  const svix_id = headerPayload["svix-id"];
+  const svix_timestamp = headerPayload["svix-timestamp"];
+  const svix_signature = headerPayload["svix-signature"];
 
-  if (!svixHeaders["svix-id"] || !svixHeaders["svix-timestamp"] || !svixHeaders["svix-signature"]) {
-    console.error("Missing required Svix headers.");
+  console.log("Received Webhook Request");
+  console.log("Svix Headers:", { svix_id, svix_timestamp, svix_signature });
+
+  if (!svix_id || !svix_timestamp || !svix_signature) {
+    console.error("Missing svix headers.");
     return NextResponse.error({
       status: 400,
-      statusText: "Invalid Svix webhook headers.",
+      statusText: "Invalid webhook headers.",
     });
   }
 
-  const body = await req.text();
+  const payload = await req.json();
+  console.log("Received Webhook Payload:", payload);
+
+  const body = JSON.stringify(payload);
+
   const webhook = new Webhook(WEBHOOK_SECRET);
 
   let evt;
   try {
-    evt = webhook.verify(body, svixHeaders);
+    evt = webhook.verify(body, {
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
+    });
+    console.log("Webhook Verified Successfully");
   } catch (err) {
     console.error("Webhook verification failed:", err);
     return NextResponse.error({
       status: 401,
-      statusText: "Unauthorized webhook request.",
+      statusText: "Unauthorized webhook",
     });
   }
 
-  const { id, type: eventType, data } = evt;
+  const { id, type: eventType } = evt;
+  console.log("Webhook Event:", eventType, "Event ID:", id);
 
   try {
     if (eventType === "user.created") {
-      const { email_addresses, image_url, username } = data;
+      console.log("Handling user.created event...");
+
+      const { email_addresses, image_url, username } = evt.data;
       const user = {
         clerkId: id,
         email: email_addresses[0]?.email_address || "",
@@ -56,31 +71,49 @@ export async function POST(req) {
         photo: image_url || null,
       };
 
+      console.log("Extracted User Data:", user);
+
       const newUser = await createUser(user);
+      console.log("User created in MongoDB:", newUser);
 
       if (newUser) {
         await clerkClient.users.updateUser(id, {
-          publicMetadata: { userId: newUser.id },
+          publicMetadata: {
+            userId: newUser.id,
+          },
         });
-        return NextResponse.json({ message: "User created successfully", user: newUser });
+        console.log("User metadata updated in Clerk");
       } else {
+        console.error("User creation failed in MongoDB");
         await clerkClient.users.deleteUser(id);
-        console.error("Failed to save user in the database.");
         return NextResponse.error({
           status: 400,
-          statusText: "Database error: User creation failed.",
+          statusText: "User creation failed",
         });
       }
-    } else {
-      console.log(`Unhandled event type: ${eventType}`);
+
+      return NextResponse.json({ message: "OK", user: newUser });
     }
   } catch (error) {
     console.error(`Error handling ${eventType} event:`, error);
     return NextResponse.error({
       status: 500,
-      statusText: `Server error handling ${eventType} event.`,
+      statusText: `Error handling ${eventType} event`,
     });
   }
 
-  return NextResponse.json({ message: "Webhook processed successfully." });
+  return NextResponse.json({ message: "Webhook processed successfully" });
+}
+
+async function createUser(user) {
+  try {
+    console.log("Connecting to MongoDB...");
+    await connect(); // Ensure you're connected to MongoDB
+    const newUser = await User.create(user); // Your mongoose user creation logic
+    console.log("User created in MongoDB:", newUser);
+    return newUser;
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw new Error("Error creating user in MongoDB.");
+  }
 }
