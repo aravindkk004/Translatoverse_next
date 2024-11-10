@@ -1,5 +1,5 @@
 # Translatoverse
-[![Logo](https://img.icons8.com/ios/452/translate.png)](https://icons8.com/icons/set/translate)
+
 **Translatoverse** is a multilingual translation web platform that provides seamless translation services across a variety of formats, including PDF, images, handwritten text, voice, and more. Users can easily translate and interact with content in different languages, save bookmarks for quick access, and track their translation history. The app also supports features like download options in various formats (PDF, image, MP3), copying, sharing, and managing a personalized translation history. It utilizes Clerk for authentication, Flask for the backend, and Next.js for the frontend.
 
 ## Features
@@ -17,13 +17,18 @@
 
 ## 🚀 Tech Stack
 
-- **Frontend:** [Next.js](https://nextjs.org/) with Tailwind CSS
-- **Backend:** [Flask](https://flask.palletsprojects.com/)
-- **Authentication:** [Clerk](https://clerk.dev/)
-- **Database:** [MongoDB](https://www.mongodb.com/)
-- **Hosting:** [Vercel](https://vercel.com/) (for frontend), [Heroku](https://www.heroku.com/) or [DigitalOcean](https://www.digitalocean.com/) (for backend)
+- **Frontend**: 
+  - **Next.js** for server-side rendering, routing, and dynamic components.
+  - **React** for building user interfaces.
+  - **Tailwind CSS** for responsive and utility-first styling.
 
----
+- **Backend**:
+  - **Flask** for handling API requests and managing backend logic.
+  - **MongoDB** for storing user data, translation history, and bookmarks.
+  - **Mongoose** for data modeling with MongoDB.
+
+- **Authentication**: 
+  - **Clerk** for secure user authentication and session management.
 
 ## Setup Instructions
 
