@@ -1,10 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
-import TopNav from "./DashboardPageComponents/TopNav";
-import SideNav from "./DashboardPageComponents/SideNav";
-import MainBarLayout from "./DashboardPageComponents/MainBarLayout";
+"use client"
+import { useEffect, useState } from "react";
+import TopNav from "@/components/Dashboardpage/DashboardPageComponents/TopNav";
+import SideNav from "@/components/Dashboardpage/DashboardPageComponents/SideNav";
 
-const DashboardPageLayout = () => {
+const page = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,12 +26,12 @@ const DashboardPageLayout = () => {
       <div className="h-[100vh]">
         <TopNav onClick={setvisibility} />
         <div className="flex h-[87%]">
-            <SideNav visible={visible} active={"dashboard"}/>
-            <MainBarLayout />
+          <SideNav visible={visible} active={"bookmark"}/>
+          {/* <MainBarLayout /> */}
         </div>
       </div>
     </>
   );
 };
 
-export default DashboardPageLayout;
+export default page;

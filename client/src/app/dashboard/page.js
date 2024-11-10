@@ -1,10 +1,9 @@
-import { UserButton } from "@clerk/nextjs";
+import DashboardPageLayout from "@/components/Dashboardpage/DashboardPageLayout";
 
 const page = () => {
   return (
     <>
-      <div>page</div>
-      <UserButton />
+      <DashboardPageLayout />
     </>
   );
 };
