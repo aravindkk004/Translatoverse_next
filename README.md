@@ -1,5 +1,5 @@
 # Translatoverse
-
+[![Logo](https://img.icons8.com/ios/452/translate.png)](https://icons8.com/icons/set/translate)
 **Translatoverse** is a multilingual translation web platform that provides seamless translation services across a variety of formats, including PDF, images, handwritten text, voice, and more. Users can easily translate and interact with content in different languages, save bookmarks for quick access, and track their translation history. The app also supports features like download options in various formats (PDF, image, MP3), copying, sharing, and managing a personalized translation history. It utilizes Clerk for authentication, Flask for the backend, and Next.js for the frontend.
 
 ## Features
@@ -15,20 +15,15 @@
 - **Backend**: Flask-based API for processing translations, managing bookmarks, and handling user authentication.
 - **Frontend**: Next.js for the responsive and dynamic frontend interface.
 
-## Tech Stack
+## 🚀 Tech Stack
 
-- **Frontend**: 
-  - **Next.js**: A React-based framework for server-side rendering, page routing, and handling dynamic components.
-  - **React**: JavaScript library for building user interfaces.
-  - **CSS (Tailwind)**: Utility-first CSS framework for rapid UI development.
+- **Frontend:** [Next.js](https://nextjs.org/) with Tailwind CSS
+- **Backend:** [Flask](https://flask.palletsprojects.com/)
+- **Authentication:** [Clerk](https://clerk.dev/)
+- **Database:** [MongoDB](https://www.mongodb.com/)
+- **Hosting:** [Vercel](https://vercel.com/) (for frontend), [Heroku](https://www.heroku.com/) or [DigitalOcean](https://www.digitalocean.com/) (for backend)
 
-- **Backend**:
-  - **Flask**: A micro web framework in Python for handling API requests and processing translations.
-  - **MongoDB**: NoSQL database to store user data, translation history, and bookmarks.
-  - **Mongoose**: Object Data Modeling (ODM) library for MongoDB and Node.js.
-  
-- **Authentication**:
-  - **Clerk**: A secure authentication service for user registration, login, and session management.
+---
 
 ## Setup Instructions
 
