@@ -45,7 +45,7 @@ const FaqSection = () => {
             {activeIndex === 0 && (
               <div id="collapse-one" className="accordion-content w-full overflow-hidden pr-4">
                 <p className="text-base text-gray-900 font-normal leading-6">
-                  To reset your password, go to the login page, click "Forgot Password," and follow the instructions to reset it via email.
+                  To reset your password, go to the login page, click &quot;Forgot Password&quot; and follow the instructions to reset it via email.
                 </p>
               </div>
             )}
