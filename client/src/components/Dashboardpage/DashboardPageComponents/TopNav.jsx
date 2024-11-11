@@ -8,11 +8,11 @@ const TopNav = ({ onClick }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // This will ensure that content only renders on the client
+    setIsClient(true);
   }, []);
 
   if (!isClient) {
-    return null; // Don't render anything on the server-side
+    return null; 
   }
 
   return (
@@ -23,7 +23,8 @@ const TopNav = ({ onClick }) => {
           size={"30px"}
           onClick={onClick}
         />
-        <h3 className="font-bold text-xl">Translatoverse</h3>
+        <img src="logo.png" alt="" loading="lazy" className="md:h[120px] md:w-[280px] h-[30px] w-[180px]"/>
+        {/* <h3 className="font-bold text-xl">Translatoverse</h3> */}
       </div>
       <div className="flex items-center gap-[10px]">
         <SignedIn>

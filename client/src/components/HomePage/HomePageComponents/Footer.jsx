@@ -5,7 +5,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
-    const year = new Date().getFullYear();
+  const year = new Date().getFullYear();
   return (
     <>
       <section
@@ -14,13 +14,16 @@ const Footer = () => {
       >
         <div className="web-det">
           <h2 className="text-xl font-bold">TranslatoVerse</h2>
-          <p className="text-gray-500">Break down your language barriers.</p>
+          <p className="text-gray-500">
+            Translatoverse is a multilingual translation platform for text,
+            images, PDFs, and voice.
+          </p>
         </div>
         <div className="social">
           <h3 className="text-xl font-bold">Social</h3>
           <address className="text-gray-500 my-3">
-            <a href="mailto:translatoverse@gmail.com">
-              translatoverse@gmail.com
+            <a href="mailto:aravind463kk30@gmail.com">
+              aravind463kk30@gmail.com
             </a>
           </address>
           <div className="icons flex flex-wrap gap-5">
@@ -58,7 +61,9 @@ const Footer = () => {
           </a>
         </div>
       </section>
-      <p className="p-3 text-center">Copyright &copy; {year} | All rights reserved.</p>
+      <p className="p-3 text-center">
+        Copyright &copy; {year} | All rights reserved.
+      </p>
     </>
   );
 };

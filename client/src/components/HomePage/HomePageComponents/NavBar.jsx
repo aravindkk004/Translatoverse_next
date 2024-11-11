@@ -32,15 +32,16 @@ export default function NavBar() {
   return (
     <>
       <section id="navbar">
-        {/* <nav className="py-5 fixed top-0 w-full flex items-center justify-between px-4 lg:px-20 bg-white"> */}
         <nav
-          className={`py-5 fixed top-0 w-full flex items-center justify-between px-4 lg:px-20 ${
+          className={`py-5 fixed top-0 w-full flex items-center justify-between px-4 lg:px-20 z-[20] ${
             isScrolled ? "bg-white shadow-md" : "bg-transparent"
           } transition-colors duration-300`}
         >
           <div className="logo flex items-center w-1/4">
-            {/* <img src="" alt="" loading="lazy" /> */}
-            <h1 className="text-2xl font-bold z-20">TranslatoVerse</h1>
+            <Link href="/">
+              <img src="logo.png" alt="" loading="lazy" />
+            </Link>
+            {/* <h1 className="text-2xl font-bold z-20">TranslatoVerse</h1> */}
           </div>
           <div className="nav-items hidden lg:flex items-center">
             <ul className="flex items-center text-lg ">

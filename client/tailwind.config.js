@@ -14,7 +14,7 @@ module.exports = {
       },
       fontFamily: {
         "general":"Inter", 
-        "title": ["Merriweather", "sans-serif"]
+        // "title": ["Merriweather", "sans-serif"]
       },
       colors: {
         customHoverColor: '#fe6044', 

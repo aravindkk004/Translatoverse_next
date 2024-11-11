@@ -26,7 +26,7 @@ const DashboardPageLayout = () => {
     <>
       <div className="h-[100vh]">
         <TopNav onClick={setvisibility} />
-        <div className="flex h-[87%]">
+        <div className="flex h-[89%]">
             <SideNav visible={visible} active={"dashboard"}/>
             <MainBarLayout />
         </div>
