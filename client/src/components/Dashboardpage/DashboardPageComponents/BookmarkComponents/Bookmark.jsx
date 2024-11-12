@@ -47,7 +47,7 @@ const Bookmark = () => {
           <p className="truncate w-[50ch]" title="Click to view full text">
             To make the form responsive and apply a 70% width for the box while
             ensuring the flexbox layout works well on different screen sizes,
-            you can use Tailwind's responsive utility classes.
+            you can use Tailwind&apos;s responsive utility classes.
           </p>
         </div>
 
@@ -57,7 +57,7 @@ const Bookmark = () => {
           <p className="truncate w-[50ch]" title="Click to view full text">
             To make the form responsive and apply a 70% width for the box while
             ensuring the flexbox layout works well on different screen sizes,
-            you can use Tailwind's responsive utility classes.
+            you can use Tailwind&apos;s responsive utility classes.
           </p>
         </div>
 
