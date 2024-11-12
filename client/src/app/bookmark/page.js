@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import TopNav from "@/components/Dashboardpage/DashboardPageComponents/TopNav";
 import SideNav from "@/components/Dashboardpage/DashboardPageComponents/SideNav";
+import BookmarkPage from "@/components/Dashboardpage/DashboardPageComponents/BookmarkComponents/BookmarkPage";
 
 const Page = () => {
   const [visible, setVisible] = useState(false);
@@ -28,6 +29,7 @@ const Page = () => {
         <div className="flex h-[87%]">
           <SideNav visible={visible} active={"bookmark"}/>
           {/* <MainBarLayout /> */}
+          <BookmarkPage />
         </div>
       </div>
     </>

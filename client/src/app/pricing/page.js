@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import TopNav from "@/components/Dashboardpage/DashboardPageComponents/TopNav";
 import SideNav from "@/components/Dashboardpage/DashboardPageComponents/SideNav";
-import SupportPage from "@/components/Dashboardpage/SupportPage";
+import PricingPage from "@/components/Dashboardpage/DashboardPageComponents/PricingPage";
 
 const Page = () => {
   const [visible, setVisible] = useState(false);
@@ -27,9 +27,9 @@ const Page = () => {
       <div className="h-[100vh]">
         <TopNav onClick={setvisibility} />
         <div className="flex h-[87%]">
-          <SideNav visible={visible} active={"support"}/>
+          <SideNav visible={visible} active={"pricing"}/>
           {/* <MainBarLayout /> */}
-          <SupportPage />
+          <PricingPage />
         </div>
       </div>
     </>

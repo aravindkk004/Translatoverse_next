@@ -5,6 +5,7 @@ import { BiSupport } from "react-icons/bi";
 import { MdLogout } from "react-icons/md";
 import Link from "next/link";
 import { useState } from "react";
+import { LuCircleDollarSign } from "react-icons/lu";
 
 const SideNav = ({ visible, active }) => {
   const [activeBar, setActiveBar] = useState(active);
@@ -34,6 +35,12 @@ const SideNav = ({ visible, active }) => {
       icon: <BiSupport size={"20px"} />,
       path: "/support",
     },
+    {
+      id: "pricing",
+      label: "Pricing",
+      icon: <LuCircleDollarSign size={"20px"}/>,
+      path: "/pricing"
+    }
   ];
 
   return (

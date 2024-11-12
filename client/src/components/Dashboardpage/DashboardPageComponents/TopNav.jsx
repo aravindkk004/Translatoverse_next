@@ -28,9 +28,17 @@ const TopNav = ({ onClick }) => {
       </div>
       <div className="flex items-center gap-[10px]">
         <SignedIn>
-          <UserButton />
+          <UserButton appearance={{
+                    elements: {
+                      rootBox: {
+                        width: "30px",
+                        height: "30px",
+                        transform: "scale(1.2)", // Increases size
+                      },
+                    },
+                  }}/>
         </SignedIn>
-        <p className="text-lg">{user?.username}</p>
+        <p className="text-lg hidden md:block">{user?.username}</p>
       </div>
     </nav>
   );

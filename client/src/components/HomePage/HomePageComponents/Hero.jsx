@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <>
@@ -12,9 +14,11 @@ export default function Hero() {
               seamlessly. Break language barriers with ease using
               TranslatoVerse.
             </p>
-            <button className="mt-3 bg-customHoverColor rounded-full px-10 py-2 text-white hover:shadow-lg">
-              Get started
-            </button>
+            <Link href="/dashboard">
+              <button className="mt-3 bg-customHoverColor rounded-full px-10 py-2 text-white hover:shadow-lg">
+                Get started
+              </button>
+            </Link>
           </div>
           <div className="hero-img z-2 lg:w-1/2 w-full flex items-center justify-center">
             <img
