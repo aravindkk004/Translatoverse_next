@@ -18,7 +18,7 @@ const OutputBox = ({
   selectedLanguage,
   translation,
   handleLanguageChange,
-  handleBookmark
+  handleBookmark,
 }) => {
   const [selectedFormat, setSelectedFormat] = useState("pdf");
   const [clientTranslation, setClientTranslation] = useState("");
@@ -82,7 +82,7 @@ const OutputBox = ({
       <div>
         <div
           id="talltweets"
-          className="bg-white mt-[20px] w-full h-[300px] resize-none rounded-lg outline-none p-[10px]"
+          className="bg-white mt-[20px] w-full h-[300px] resize-none rounded-lg outline-none p-[13px] overflow-y-scroll overflow-hidden"
         >
           {clientTranslation || ""}
         </div>

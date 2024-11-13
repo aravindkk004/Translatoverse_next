@@ -14,7 +14,7 @@ const SupportPage = () => {
           <div>
             <div className="flex flex-col md:flex-row gap-[20px] mb-4">
               <div className="w-full md:w-[48%]">
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-md font-medium mb-2">
                   Your Name
                 </label>
                 <input
@@ -24,7 +24,7 @@ const SupportPage = () => {
                 />
               </div>
               <div className="w-full md:w-[48%]">
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-md font-medium mb-2">
                   Your Email
                 </label>
                 <input
@@ -36,7 +36,7 @@ const SupportPage = () => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-md font-medium mb-2">
               Your Message
             </label>
             <textarea
@@ -44,7 +44,7 @@ const SupportPage = () => {
               className="border border-[#D8DFFF] px-[16px] py-[16px] w-full h-[120px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3758f9] resize-none"
             ></textarea>
           </div>
-          <button className="h-[50px] w-[190px] bg-[#3758f9] text-white rounded-lg my-[10px]">Sumbit Ticket</button>
+          <button className="h-[50px] w-[190px] bg-[#3758f9] text-white rounded-lg my-[10px] font-semibold">Sumbit Ticket</button>
         </div>
       </div>
     </>

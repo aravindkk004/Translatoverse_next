@@ -74,9 +74,9 @@ export default function NavBar() {
                   appearance={{
                     elements: {
                       rootBox: {
-                        width: "50px",
-                        height: "50px",
-                        transform: "scale(1.5)", // Increases size
+                        width: "20px",
+                        height: "20px",
+                        transform: "scale(1.2)", // Increases size
                       },
                     },
                   }}

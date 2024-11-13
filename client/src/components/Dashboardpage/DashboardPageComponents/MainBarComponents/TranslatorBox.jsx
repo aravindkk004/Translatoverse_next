@@ -46,6 +46,86 @@ const TranslatorBox = () => {
     setTranslating(false);
   };
 
+  const audioTranslate = async (selectedFile, selectedLanguage) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("target_language", selectedLanguage);
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/voice_translate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setTranslatedText(response.data.translated_text);
+      } else {
+        toast.error(response.data.error || "MP3 translation failed.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const imageTranslate = async (selectedFile, selectedLanguage) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile); // Append the selected image file
+      formData.append("target_language", selectedLanguage); // Append the target language
+
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/img_translate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Specify multipart for file uploads
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        toast.error(response.data.error || "Image translation failed.");
+        return null;
+      }
+    } catch (error) {
+      // console.error("Error during image translation:", error);
+      toast.error("Unable to connect to the translation server.");
+      return null;
+    }
+  };
+
+  const pdfTranslate = async (selectedFile, selectedLanguage) => {
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("target_language", selectedLanguage);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/pdf_translate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        toast.error(response.data.error || "Image translation failed.");
+        return null;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleInputText = (event) => {
     setInputText(event.target.value);
     setSelectedFile(null); // Clear selected file when typing text
@@ -83,14 +163,17 @@ const TranslatorBox = () => {
     // console.log(selectedFile);
     console.log(translation);
     try {
-      const response = await axios.post("http://localhost:3000/api/bookmark/add_bookmark", {
-        clerkId: user.id,
-        translation_type: fileType || "text",
-        inputText: fileType!== "text"?inputText: "",
-        destination_language: selectedLanguage,
-        file_url: fileType !== "text" ? selectedFile : null,
-        outputText: translation,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/bookmark/add_bookmark",
+        {
+          clerkId: user.id,
+          translation_type: fileType || "text",
+          inputText: fileType !== "text" ? inputText : "",
+          destination_language: selectedLanguage,
+          file_url: fileType !== "text" ? selectedFile : null,
+          outputText: translation,
+        }
+      );
 
       if (response.status === 200) {
         toast.success("Bookmark added successfully.");

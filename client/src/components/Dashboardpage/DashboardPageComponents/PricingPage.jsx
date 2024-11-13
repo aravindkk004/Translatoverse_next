@@ -1,11 +1,11 @@
 const PricingPage = () => {
   return (
     <main className="lg:w-[85%] h-full p-[10px] overflow-y-scroll w-full">
-      <section className="py-24 relative w-full">
-        <div className="absolute h-[36.5rem] w-full top-0 bg-gradient-to-r from-indigo-600 to-violet-600 -z-10"></div>
+      <section className="py-10 relative w-full">
+        {/* <div className="absolute h-[36.5rem] w-full top-0 bg-gradient-to-r from-indigo-600 to-violet-600 -z-10"></div> */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h2 className="font-manrope text-5xl text-center font-bold text-white mb-4">
+            <h2 className="font-manrope text-5xl text-center font-bold text-black mb-4">
               Suitable pricing plans
             </h2>
             <p className="text-gray-300 text-xl text-center leading-6">
@@ -29,7 +29,7 @@ const PricingPage = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="font-manrope text-2xl font-bold my-7 text-center text-indigo-600">
+                <h3 className="font-manrope text-2xl font-bold my-2 text-center text-indigo-600">
                   Free Plan
                 </h3>
                 <div className="flex items-center justify-center">
@@ -40,7 +40,7 @@ const PricingPage = () => {
                 </div>
               </div>
 
-              <ul className="mb-12 space-y-6 text-left text-lg text-gray-600 group-hover:text-gray-900">
+              <ul className="mb-12 space-y-4 text-left text-lg text-gray-600 group-hover:text-gray-900">
                 <li className="flex items-center space-x-3.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                   <span>AI advisor for a day</span>
@@ -80,7 +80,7 @@ const PricingPage = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="font-manrope text-2xl font-bold my-7 text-center text-indigo-600">
+                <h3 className="font-manrope text-2xl font-bold my-2 text-center text-indigo-600">
                   Business Plan
                 </h3>
                 <div className="flex items-center justify-center">
@@ -91,7 +91,7 @@ const PricingPage = () => {
                 </div>
               </div>
 
-              <ul className="mb-12 space-y-6 text-left text-lg text-gray-600 group-hover:text-gray-900">
+              <ul className="mb-12 space-y-4 text-left text-lg text-gray-600 group-hover:text-gray-900">
                 <li className="flex items-center space-x-3.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                   <span>AI advisor full time</span>
@@ -132,7 +132,7 @@ const PricingPage = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="font-manrope text-2xl font-bold my-7 text-center text-indigo-600">
+                <h3 className="font-manrope text-2xl font-bold my-2 text-center text-indigo-600">
                   Enterprise Plan
                 </h3>
                 <div className="flex items-center justify-center">
@@ -143,7 +143,7 @@ const PricingPage = () => {
                 </div>
               </div>
 
-              <ul className="mb-12 space-y-6 text-left text-lg text-gray-600 group-hover:text-gray-900">
+              <ul className="mb-12 space-y-4 text-left text-lg text-gray-600 group-hover:text-gray-900">
                 <li className="flex items-center space-x-3.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                   <span>AI advisor full time</span>

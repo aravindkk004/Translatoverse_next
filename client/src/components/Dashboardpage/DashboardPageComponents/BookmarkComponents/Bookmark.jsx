@@ -14,7 +14,7 @@ const Bookmark = () => {
 
   return (
     <>
-      <div className="shadow-lg rounded-lg h-[350px] w-[300px] p-[20px] border border-gray-200">
+      <div className="shadow-lg rounded-lg h-[350px] w-[300px] p-[20px] border border-gray-200 mb-[50px]">
         {/* Bookmark header */}
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-semibold text-lg">Bookmark</h3>
@@ -57,7 +57,7 @@ const Bookmark = () => {
           <p className="truncate w-[50ch]" title="Click to view full text">
             To make the form responsive and apply a 70% width for the box while
             ensuring the flexbox layout works well on different screen sizes,
-            you can use Tailwind&apos;s responsive utility classes.
+            you can use Tailwind&apos; s responsive utility classes.
           </p>
         </div>
 
