@@ -1,16 +1,45 @@
-import { FiTrash } from 'react-icons/fi'; 
-import { useState, useEffect } from 'react';
+import { FiTrash } from "react-icons/fi";
+import { useState, useEffect, useReducer } from "react";
+import countries from "@/components/language";
+import Modal from "@/components/Modal";
+import ShowBookmark from "./ShowBookmark";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const Bookmark = () => {
-  const [bookmarkDateTime, setBookmarkDateTime] = useState('');
-  const formatDate = (date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    return date.toLocaleString('en-US', options);
-  };
+const Bookmark = ({ bookmark }) => {
+  const [bookmarkDateTime, setBookmarkDateTime] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   useEffect(() => {
-    const currentDate = new Date();
-    setBookmarkDateTime(formatDate(currentDate)); 
-  }, []);
+    const convertDate = async () => {
+      const dateString = bookmark.createdAt;
+      const date = new Date(dateString);
+      const normalDateTime = date.toLocaleString();
+      setBookmarkDateTime(normalDateTime);
+    };
+    convertDate();
+  }, [bookmark]);
+
+  const handleCloseModel = () => {
+    setIsModalOpen(false); // This will close the modal
+  };
+  const bookmarkId = bookmark._id;
+  const deleteBookmark = async () => {
+    try {
+      const response = await axios.delete("/api/bookmark/delete-bookmark", {
+        data: { bookmarkId },
+      });
+      if (response.status === 200) {
+        toast.success("Deleted Successfully");
+      } else {
+        toast.error("Error while deleting");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -18,7 +47,10 @@ const Bookmark = () => {
         {/* Bookmark header */}
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-semibold text-lg">Bookmark</h3>
-          <button className="text-red-500 hover:text-red-700">
+          <button
+            className="text-red-500 hover:text-red-700"
+            onClick={deleteBookmark}
+          >
             <FiTrash size={20} />
           </button>
         </div>
@@ -26,28 +58,26 @@ const Bookmark = () => {
         {/* Translation Type */}
         <div className="flex items-center my-[10px]">
           <p className="font-semibold mr-2">Translation Type:</p>
-          <p>Text</p>
+          <p>{bookmark.translation_type}</p>
         </div>
 
         {/* Destination Language */}
         <div className="flex items-center my-[10px]">
           <p className="font-semibold mr-2">Destination Language:</p>
-          <p>Tamil</p>
+          <p>{countries[bookmark.destination_language]}</p>
         </div>
 
         {/* Img/PDF/MP3 URL */}
         <div className="flex items-center my-[10px]">
           <p className="font-semibold mr-2">Img/PDF/MP3 URL:</p>
-          <p>url</p>
+          <p>{bookmark.file_url ? bookmark.file_url : "Not Applicable"}</p>
         </div>
 
         {/* Input Text */}
         <div className="flex items-center my-[10px]">
           <p className="font-semibold text-nowrap mr-2">Input Text:</p>
           <p className="truncate w-[50ch]" title="Click to view full text">
-            To make the form responsive and apply a 70% width for the box while
-            ensuring the flexbox layout works well on different screen sizes,
-            you can use Tailwind&apos;s responsive utility classes.
+            {bookmark.inputText}
           </p>
         </div>
 
@@ -55,9 +85,7 @@ const Bookmark = () => {
         <div className="flex items-center my-[10px]">
           <p className="font-semibold text-nowrap mr-2">Output:</p>
           <p className="truncate w-[50ch]" title="Click to view full text">
-            To make the form responsive and apply a 70% width for the box while
-            ensuring the flexbox layout works well on different screen sizes,
-            you can use Tailwind&apos; s responsive utility classes.
+            {bookmark.outputText}
           </p>
         </div>
 
@@ -68,10 +96,16 @@ const Bookmark = () => {
         </div>
 
         {/* Bookmark Tags (Optional) */}
-        <div className="flex gap-2 mt-4">
-          <span className="bg-blue-200 text-blue-800 text-sm py-2 px-5 rounded-md cursor-pointer">Show more</span>
+        <div className="flex gap-2 mt-4" onClick={handleOpenModal}>
+          <span className="bg-blue-200 text-blue-800 text-sm py-2 px-5 rounded-md cursor-pointer">
+            Show more
+          </span>
           {/* <span className="bg-green-200 text-green-800 text-sm py-1 px-2 rounded-lg">Urgent</span> */}
         </div>
+
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <ShowBookmark bookmark={bookmark} />
+        </Modal>
       </div>
     </>
   );

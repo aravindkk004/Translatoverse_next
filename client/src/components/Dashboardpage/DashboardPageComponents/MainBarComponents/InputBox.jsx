@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useRef, useState, useEffect } from "react";
 import { TbWorld } from "react-icons/tb";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -8,6 +8,7 @@ const fileTypes = [
   { value: "pdf", label: "PDF", icon: "/google-drive.png" },
   { value: "image", label: "Image", icon: "/imgicon.png" },
   { value: "voice", label: "Voice", icon: "/voiceicon.png" },
+  { value: "Text", label: "Text", icon: "/text-icon.jpg" },
 ];
 
 const InputBox = ({
@@ -25,7 +26,7 @@ const InputBox = ({
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Ensure `URL.createObjectURL` executes only on client
+    setIsClient(true); 
   }, []);
 
   const handleTopDivClick = () => {

@@ -14,7 +14,13 @@ export async function POST(req) {
     outputText,
   } = await req.json();
 
-  if (!clerkId || !translation_type || !destination_language || !outputText || !inputText) {
+  if (
+    !clerkId ||
+    !translation_type ||
+    !destination_language ||
+    !outputText ||
+    !inputText
+  ) {
     return NextResponse.json(
       { error: "All fields are required." },
       { status: 400 }
@@ -42,11 +48,9 @@ export async function POST(req) {
 
     try {
       user.Bookmarks.push(newBookmark);
-      console.log("Before saving the user document");
       await user.save();
-      console.log("User document saved successfully");
     } catch (saveError) {
-      console.error("Error saving user document:", saveError);
+      console.log("Error saving user document:", saveError);
       return NextResponse.json(
         { error: "Failed to save the bookmark." },
         { status: 500 }
